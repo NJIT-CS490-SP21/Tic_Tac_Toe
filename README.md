@@ -15,12 +15,12 @@
 2. Run command in another terminal, `cd` into the project directory, and run `npm run start`
 3. Preview web page in browser '/'
 
-##Known problems
+## Known problems
 
 
 
-##Technical issues
-####Javascrpit and react
+## Technical issues
+#### Javascrpit and react
 Probabaly the hardest thing in this project was actually understading the syntax of both javascript and react.
 I wouldny say that the project was hard, but these two languages was hard to catch up. I had problem understanding 
 what each line of code beacause I believe once you understand something then you cna build and improve your work.
@@ -31,7 +31,7 @@ In order to understand them better I used this additional resources:
 * https://www.w3schools.com/react
 * https://www.w3schools.com/js/DEFAULT.asp
 
-####Socketio
+#### Socketio
 I had a hard time understading how socketio works. We used alot of functions like `useEffect()`, `.emit()` and I had no idea what these functions do.
 Again understand is the core of building on something. I knew its a bidirectional and event based communication but again what those functions actually do 
 in the code takes time for me. The resources that help me on socketio are:
