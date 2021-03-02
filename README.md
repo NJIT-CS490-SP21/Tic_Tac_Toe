@@ -16,7 +16,10 @@
 3. Preview web page in browser '/'
 
 ## Known problems
-
+Spectatots are not shown in the app
+Deplying to heroku: I took all the steps requires for this project but unfortunately Im getting an error 
+` ! [remote rejected]   milestone_1 -> main (pre-receive hook declined)
+error: failed to push some refs to 'https://git.heroku.com/fast-dusk-25658.git'`
 
 
 ## Technical issues
