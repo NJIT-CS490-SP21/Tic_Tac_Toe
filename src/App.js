@@ -14,9 +14,10 @@ function App() {
   const inputRef = useRef(null);
   const [user_name, setUser_name] = useState([]);
   const [currentView, setCurrentView] = React.useState("view1");
-  const winner = calculateWinner(board);
+  const win = calculateWinner(board);
+  const [login,setLogin] = useState([]);
   const [ isXNext, setIsXNext ] = useState(true);
-  const nextSymbol = isXNext ? "O" : "X";
+  const nextSymbol = isXNext ? "X" : "O";
   
   
   const ViewOne = ({onClick}) => (
@@ -39,13 +40,18 @@ function App() {
     }
   }
   
-   function getStatus() {
-    if (winner) {
-      return ( <h4> Winner:  {winner} </h4>);
+   function getStatus(login) {
+    if (win) {
+      if (login[0]===win){
+        return ( <h4> Winner:  {login[0]} </h4>);
+      }
+      else{
+        return ( <h4> Winner:  {login[1]} </h4>);
+      }
     } else if (isBoardFull(board)) {
       return "Draw!";
     } else {
-      return "Next player: " + nextSymbol;
+      return "Next player: " + user_name+ nextSymbol;
     }
   }
   
@@ -101,18 +107,18 @@ function App() {
         <div class="box" id="box8" onClick={() => onClickT(7)}>{board[7]}</div>
         <div class="box" id="box9" onClick={() => onClickT(8)}>{board[8]}</div>
         </div>
-        <div className="game-info">{getStatus()}</div>
+        <div className="game-info">{getStatus(login)}</div>
         <div className="restart-button">{renderRestartButton()}</div>
         <div className="game-info">
         <button onClick={refreshPage}>Click to reload!</button>
         </div>
     </ul>
-    {calculateWinner(board,user_name)};
+    {calculateWinner(board,login)};
     </div>
     );
     
     
-    function calculateWinner(boardCopy,name) {
+    function calculateWinner(boardCopy,winner_person) {
         const lines = [
                        [0, 1, 2],
                        [3, 4, 5],
@@ -126,9 +132,11 @@ function App() {
         for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
         if (boardCopy[a] && boardCopy[a] === boardCopy[b] && boardCopy[a] === boardCopy[c]) {
+            //socket.emit('winner', { message: winner_person });
             return (
-              'Winner is: '+ boardCopy[a] 
+              'Winner is: ' +boardCopy[a] 
               );
+            
         }
       }
     return null;
@@ -155,23 +163,30 @@ function App() {
     });
    
     
-    socket.on('login', (name) => {
-      const user_nameCopy = [...user_name];
-      console.log(name);
-      if (state2==0){
-        user_nameCopy[name.user_nameCopy]=nextSymbol;
-        console.log(user_nameCopy[name.user_nameCopy]);
-        calculateWinner(board,name);
-      }
-      else {
-        user_nameCopy[name.user_nameCopy]=nextSymbol;
-        console.log(user_nameCopy[name.user_nameCopy]);
-        calculateWinner(board,name);
-      }
+    socket.on('login', (Login_name) => {
+      //const loginCopy = [...login];
+      console.log(Login_name);
+      //if (state2==0){
+        //loginCopy[Login_name.loginCopy]=nextSymbol;
+        setLogin(Login_name);
+       // console.log(loginCopy[Login_name.user_nameCopy]);
+        //calculateWinner(board,name);
+      //}
+     // else {
+        //user_nameCopy[Login_name.user_nameCopy]=nextSymbol;
+        setLogin(Login_name);
+       // console.log(user_nameCopy[Login_name.user_nameCopy]);
+        //calculateWinner(board,name);
+     // }
     });
+    
+     //socket.on('winner', (winner_person) => {
+     //  setWinner(winner_person.user_name);
+   //  }
+    //);
         
     return ()=> {socket.off()};
-  },[board,setState2,user_name]);
+  },[board,user_name]);
   
   return (
     <div>
