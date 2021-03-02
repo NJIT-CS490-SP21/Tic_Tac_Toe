@@ -31,16 +31,20 @@ def on_connect():
 @socketio.on('disconnect')
 def on_disconnect():
     print('User disconnected!')
-    
+
+@socketio.on('winner')
+def on_winner(data):
+    print(data)
+    winner_person = data['message']
+    socketio.emit('winner', winner_person, broadcast=True, include_self=False)
 
 @socketio.on('login')
 def on_login(data):
     print(data)
     name = data['message']
-    print(name)
-    
-    
-    socketio.emit('chat', name, broadcast=True, include_self=False)
+    Login_name.append(name)
+    print(Login_name)
+    socketio.emit('login', Login_name, broadcast=True, include_self=False)
     
 # When a client emits the event 'chat' to the server, this function is run
 # 'chat' is a custom event name that we just decided
