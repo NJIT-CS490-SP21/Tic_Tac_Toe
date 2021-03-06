@@ -1,4 +1,4 @@
-# Project2_milestone-1
+# Project2_milestone-2
 
 ## Requirements
 1. `npm install`
