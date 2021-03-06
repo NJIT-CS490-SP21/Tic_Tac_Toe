@@ -42,25 +42,39 @@ def index(filename):
 def on_connect():
     print('User connected!')
 
-
+'''
+@socketio.on('updateLeaderBoard')
+def on_updateLeaderBoard():
+    winner = db.session.query(models.Person).get(data['winner'])
+    winner.rank= winner.rank + 1
+    winner.rank= winner.rank + 1
     
+    loser = db.session.query(models.Person).get(data['loser'])
+    loser.rank= loser.rank + 1
+    loser.rank= loser.rank + 1
+    
+    db.session.commit()
+     
+    socketio.emit('user_list', {'users': users})
+    
+'''   
 @socketio.on('user_list')
 def on_userList():
     print('User connected!')
     #winner = data['users']
-    rank = 100
+    #rank = 100
     all_people = models.Person.query.all()
     users = []
-    ranks = []
+    #ranks = []
 
     for person in all_people:
         users.append(person.username)
-        ranks.append(person.rank)
+        #ranks.append(person.rank)
    
-        
+   
             
     print(users)
-    print(ranks)
+    #print(ranks)
     socketio.emit('user_list', {'users': users})
     
      
