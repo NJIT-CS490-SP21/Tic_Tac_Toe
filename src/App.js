@@ -2,28 +2,33 @@ import './App.css';
 import './Board.css';
 import { Board } from './Board.js';
 import { ListItem } from './ListItem.js';
-import { useState,useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
 import React from "react"
+
 
 const socket = io(); 
 
 function App() {
   const [board, setBoard] = useState(Array(9).fill(null));
-  const [state2, setState2]= useState(0);
-  const inputRef = useRef(null);
+  //const [state2, setState2]= useState(0);
+  //const inputRef = useRef(null);
+  const joinRef = useRef(null);
   const [user_name, setUser_name] = useState([]);
   const [currentView, setCurrentView] = React.useState("view1");
   const win = calculateWinner(board);
   const [login,setLogin] = useState([]);
   const [ isXNext, setIsXNext ] = useState(true);
   const nextSymbol = isXNext ? "X" : "O";
+  const [userList, setUserList] = useState([]);
+  const [showLeaderboard, setLeaderBoard] = useState(false);
+  const [userRank, setRankList]= useState([]);
   
   
   const ViewOne = ({onClick}) => (
   <div class="buttons">
-     Enter your user name: <input ref={inputRef} type="text" />
-      <button onClick={onClickButton}>send</button>
+     Enter your user name: <input ref={joinRef} type="text" />
+      <button onClick={onClickJoin}>send</button>
       <ul>
         {user_name.map((item, index) => <ListItem key={index} name={item} />)}
       </ul>
@@ -31,7 +36,7 @@ function App() {
   </div>
   );
 
-
+{/*
   function  onClickButton() {
     if (inputRef != null) {
       const user_name = inputRef.current.value;
@@ -39,21 +44,40 @@ function App() {
       socket.emit('login', { message: user_name });
     }
   }
+  */}
   
+   function onClickJoin() {
+    if (joinRef != null) {
+      const username = joinRef.current.value;
+      socket.emit('join', { 'user': username });
+      
+      const user_name = joinRef.current.value;
+      setUser_name(prevMessages => [...prevMessages, user_name]);
+      socket.emit('login', { message: user_name });
+    }
+   }
+   
+   
    function getStatus(login) {
     if (win) {
-      if (login[0]===win){
-        return ( <h4> Winner:  {login[0]} </h4>);
+      if (win==="X"){
+            //socket.emit('user_list', { 'users': login[0] });
+            return ( <h4> Winner:  {login[0]} </h4>);
+    
       }
       else{
-        return ( <h4> Winner:  {login[1]} </h4>);
-      }
-    } else if (isBoardFull(board)) {
-      return "Draw!";
-    } else {
-      return "Next player: " + user_name+ nextSymbol;
+        if (win ==="O"){
+            //socket.emit('user_list', { 'users': login[1] });
+            return ( <h4> Winner:  {login[1]} </h4>);
+        }}
+    } 
+    else if (isBoardFull(board)) {
+            return "Draw!";
+       } 
+    else {
+            return "Next player: " + login+ ' '+ nextSymbol;
+       }
     }
-  }
   
   
   function isBoardFull(board) {
@@ -90,6 +114,14 @@ function App() {
     </button>
   );
   }
+  
+  
+  function LeaderBoard() {
+    socket.emit('user_list', { 'users': userList });
+    setLeaderBoard((prevLeaderBoard) => {
+      return !prevLeaderBoard;
+    });
+  }
 
 
   const ViewTwo = ({onClick}) => (
@@ -108,17 +140,53 @@ function App() {
         <div class="box" id="box9" onClick={() => onClickT(8)}>{board[8]}</div>
         </div>
         <div className="game-info">{getStatus(login)}</div>
-        <div className="restart-button">{renderRestartButton()}</div>
-        <div className="game-info">
-        <button onClick={refreshPage}>Click to reload!</button>
+        <div className="restart-button">{renderRestartButton()} </div>
+        <div className="restart-button">
+        <button onClick={refreshPage}>Click to reload!</button></div>
+        <div className="restart-button">
+        <button onClick={LeaderBoard}>Click to see the LeaderBoard</button></div>
+        {showLeaderboard ? 
+        <div>
+        <table>
+            <thead>
+                  <tr>
+                      <th colspan="2">Leader board</th>
+                   </tr>
+            </thead>
+            <tbody>
+                   <tr>
+                   <td>User names</td>
+                   <td>Ranking</td>
+                   </tr>
+                   <tr>
+                   <td>{userList.map((user, index) => <tr><td><ListItem key={index} name={user} /></td></tr>)}</td> 
+                   <td>{userList.map((user, index) => <tr><td><ListItem key={index} name={100} /></td></tr>)}</td>
+                   </tr>
+            </tbody>
+        </table>
+        <div>
+        Enter username here: <input ref = { joinRef } type="text" />
+        <button onClick={onClickJoin}>Join</button>
+        
         </div>
+        </div>
+        : null}
     </ul>
-    {calculateWinner(board,login)};
+    {calculateWinner(board)};
+    <div>
+    {/*
+     <td>{userRank.map((user, index) => <tr><td><ListItem key={index} name={user} /></td></tr>)}</td>
+    <h3>All Users (History)</h3>
+        Enter username here: <input ref = { joinRef } type="text" />
+        <button onClick={onClickJoin}>Join</button>
+        {userList.map((user, index) => <ListItem key={index} name={user} />)}
+    */}
+    </div>
     </div>
     );
     
     
-    function calculateWinner(boardCopy,winner_person) {
+    function calculateWinner(boardCopy) {
         const lines = [
                        [0, 1, 2],
                        [3, 4, 5],
@@ -134,7 +202,7 @@ function App() {
         if (boardCopy[a] && boardCopy[a] === boardCopy[b] && boardCopy[a] === boardCopy[c]) {
             //socket.emit('winner', { message: winner_person });
             return (
-              'Winner is: ' +boardCopy[a] 
+               boardCopy[a] 
               );
             
         }
@@ -163,30 +231,26 @@ function App() {
     });
    
     
-    socket.on('login', (Login_name) => {
-      //const loginCopy = [...login];
-      console.log(Login_name);
-      //if (state2==0){
-        //loginCopy[Login_name.loginCopy]=nextSymbol;
-        setLogin(Login_name);
-       // console.log(loginCopy[Login_name.user_nameCopy]);
-        //calculateWinner(board,name);
-      //}
-     // else {
-        //user_nameCopy[Login_name.user_nameCopy]=nextSymbol;
-        setLogin(Login_name);
-       // console.log(user_nameCopy[Login_name.user_nameCopy]);
-        //calculateWinner(board,name);
-     // }
+    
+    socket.on('login', (data) => {
+        setLogin(data);
     });
     
+    
+    
+    socket.on('user_list', (data) => {
+      //console.log('User list event received!');
+     // console.log(data);
+      setUserList(data.users);
+      //setRankList(data.users);
+    });
      //socket.on('winner', (winner_person) => {
      //  setWinner(winner_person.user_name);
    //  }
     //);
         
     return ()=> {socket.off()};
-  },[board,user_name]);
+  },[board,login]);
   
   return (
     <div>
@@ -194,8 +258,9 @@ function App() {
           currentView === "view1" ? 
           <ViewOne onClick={page => setCurrentView(page)} /> : 
           <ViewTwo onClick={page => setCurrentView(page)} />
-       }
-    </div>
+          }
+      </div>
+    
   );
 }
 export default App;
