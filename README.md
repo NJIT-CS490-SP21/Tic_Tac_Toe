@@ -1,10 +1,11 @@
 # Project2_milestone-2
-
 ## Requirements
 1. `npm install`
 2. `pip install -r requirements.txt`
 3. `pip install flask_socketio`
 4. `pip install flask_cors`
+5. `pip install psycopg2-binary`
+6. `pip install Flask-SQLAlchemy==2.1`
 
 ## Setup
 1. Run `echo "DANGEROUSLY_DISABLE_HOST_CHECK=true" > .env.development.local` in the project directory
@@ -15,11 +16,20 @@
 2. Run command in another terminal, `cd` into the project directory, and run `npm run start`
 3. Preview web page in browser '/'
 
+##Database Setup
+1. Install PostGreSQ `sudo yum install postgresql postgresql-server postgresql-devel postgresql-contrib postgresql-docs`
+2. Initialize PSQL database `sudo service postgresql initdb`
+3. Start PSQL `sudo service postgresql start`
+4. Make a new superuser `sudo -u postgres createuser --superuser $USER`
+5. Make a new database `sudo -u postgres createdb $USER`
+#### Create a new database on Heroku and connect to our code
+1. `heroku login -i`
+2. `heroku create`
+3. New remote DB on your Heroku app `heroku addons:create heroku-postgresql:hobby-dev`
+4. In the heroku app go to the setting and then Config vars, copy and paste the DATABASE_URL and its key in the `.env` file.
+
+
 ## Known problems
-Spectatots are not shown in the app
-Deplying to heroku: I took all the steps requires for this project but unfortunately Im getting an error 
-` ! [remote rejected]   milestone_1 -> main (pre-receive hook declined)
-error: failed to push some refs to 'https://git.heroku.com/fast-dusk-25658.git'`
 
 
 ## Technical issues
