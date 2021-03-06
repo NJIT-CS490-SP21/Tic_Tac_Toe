@@ -61,13 +61,14 @@ function App() {
    function getStatus(login) {
     if (win) {
       if (win==="X"){
-            //socket.emit('user_list', { 'users': login[0] });
+            //socket.emit('user_list', { 'winner': login[0] });
+            //socket.emit('user_list', { 'loser': login[1] });
             return ( <h4> Winner:  {login[0]} </h4>);
-    
       }
       else{
         if (win ==="O"){
-            //socket.emit('user_list', { 'users': login[1] });
+            //socket.emit('user_list', { 'winner': login[1] });
+            //socket.emit('user_list', { 'loser': login[0] });
             return ( <h4> Winner:  {login[1]} </h4>);
         }}
     } 
