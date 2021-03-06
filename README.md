@@ -30,7 +30,7 @@
 
 
 ## Known problems
-
+Ranks are not updating
 
 ## Technical issues
 #### Javascrpit and react
