@@ -1,0 +1,21 @@
+.board {
+	width: 350px; /* Total horizontal dimensions */
+	height: 300px;/* Total vertical dimensions */
+	display: grid; /* Enables CSS Grid */ 
+	grid-template-columns: repeat(3, 1fr); /* Total horizontal space broken into 3 columns */
+  grid-template-rows: repeat(3, 1fr); /* Total vertical space broken into 3 rows */
+	color: #424242;
+  background: #26a69a;
+  float: left;
+  font-size: 55px;
+  font-weight: bold;
+  margin-right: -1px;
+  margin-top: 20px;
+  text-align: center;
+  justify-content: center;
+
+}
+
+.box {
+  border: 1px solid black; /* Shows the lines in the CSS grid */
+}

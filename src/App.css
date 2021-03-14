@@ -36,3 +36,61 @@
     transform: rotate(360deg);
   }
 }
+
+
+table,
+td {
+    border: 1px solid #333;
+}
+
+thead,
+tfoot {
+    background-color: #333;
+    color: #fff;
+}
+
+
+.buttons {
+  background-color: black;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.game-info {
+  font-size: 30px;
+  color: #424242;
+  height: 400px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+}
+
+.restart-button {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.header{
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.restart {
+  transition-duration: 0.4s;
+  background-color: #424242;
+  color: #fffde7;
+  border: none;
+  font-size: 24px;
+  line-height: 48px;
+  height: 48px;
+  width: 40%;
+  text-align: center;
+  border-radius: 4px;
+  justify-content: center;
+  align-items: center;
+}
